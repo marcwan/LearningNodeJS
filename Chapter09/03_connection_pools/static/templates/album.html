@@ -1,0 +1,20 @@
+<div style="float: right"><a href="/pages/admin/home">Admin</a></div>
+<div id="album_page">
+  {{#has_photos}}
+  <p> There are {{ has_photos }} photos in this album</p>
+  {{/has_photos}}
+  {{#photos}}
+  <div id="photos">
+      <div class="photo">
+        <div class='photo_holder'>
+          <img style="width: 250px; height: 250px"
+               src="{{url}}" border="0"/></div>
+        <div class='photo_desc'><p>{{ desc }}</p></div>
+      </div>
+  </div> <!-- #photos -->
+  {{/photos}}
+  <div style="clear: left"></div>
+  {{^photos}}
+      <p> This album does't have any photos in it, sorry.<p>
+  {{/photos}}
+</div> <!-- #album_page -->

@@ -1,0 +1,9 @@
+{
+  "name": "Middleware-Demos",
+  "description": "Various Demonstration Express Middleware Apps",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x"
+  }
+}

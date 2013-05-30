@@ -1,0 +1,16 @@
+
+body {
+    font-family: Helvetica, Arial New, Arial;
+    font-size: 10pt;
+}
+
+
+div#photos div.photo {
+    float: left;
+    width: 275px;
+    height: 325px;
+}
+
+.error {
+    color: #800;
+}

@@ -1,0 +1,15 @@
+
+#album_page div#photos div.photo
+{
+  width: 255px;
+  float: left;
+  padding-right: 10px;
+}
+
+#album_page div#photos div.photo img
+{
+  background-color: #ffaaaa;
+  width: 250px;
+  height: 250px;
+  background-position: center center;
+}

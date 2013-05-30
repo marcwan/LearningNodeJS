@@ -1,0 +1,59 @@
+
+<div style="float: right"><a href="/pages/login">Login</a></div>
+<form name="register" id="register">
+  <div id="error" class="error"></div>
+  <dl>
+    <dt>Email address:</dt>
+    <dd><input type="text" size="30" id="email_address" name="email_address"/></dd>
+    <dt>Display Name:</dt>
+    <dd><input type="text" size="30" id="display_name" name="display_name"/></dd>
+    <dt>Password:</dt>
+    <dd><input type="password" size="30" id="password" name="password"/></dd>
+    <dt>Password (confirm):</dt>
+    <dd><input type="password" size="30" id="password2" name="password2"/></dd>
+    <dd><input type="submit" value="Register"/>
+  </dl>
+</form>
+
+
+<script type="text/javascript">
+
+$(document).ready(function () {
+    if (window.location.href.match(/(fail)/) != null) {
+        $("#error").html("Failure creating account.");
+    }
+});
+
+$("form#register").submit(function (e) {
+  if (!$("input#email_address").val()
+      || !$("input#display_name").val()
+      || !$("input#password").val()
+      || !$("input#password2").val()) {
+      $("#error").html("You need to enter an email and password.");
+  } else if ($("input#password2").val() != $("input#password").val()) {
+      $("#error").html("Passwords don't match.");
+  } else {
+      var info = { email_address: $("input#email_address").val(),
+                   display_name: $("input#display_name").val(),
+                   password: $("input#password").val() };
+      $.ajax({
+          type: "PUT",
+          url: "/v1/users.json",
+          data: JSON.stringify(info),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (data) {
+              window.location = "/pages/admin/home";
+          },
+          error: function () {
+              var ext = window.location.href.match(/(fail)/) ? "" : "?fail";
+              window.location = window.location + ext;
+              return false;
+          }
+      });
+  }
+  return false;
+});
+
+</script>
+

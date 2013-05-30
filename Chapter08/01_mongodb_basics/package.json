@@ -1,0 +1,10 @@
+{
+  "name": "MongodB-Demo",
+  "description": "Demonstrates Using MongoDB in Node.js",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "async": "0.1.x",
+    "mongodb": "1.2.x"
+  }
+}

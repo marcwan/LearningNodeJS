@@ -1,0 +1,13 @@
+{
+  "name": "Photo-Sharing",
+  "description": "Our Photo Sharing Application with static middleware",
+  "version": "0.0.2",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "async": "0.1.x",
+    "mongodb": "1.2.x",
+    "bcrypt": "0.x",
+    "node-uuid": "1.x"
+  }
+}

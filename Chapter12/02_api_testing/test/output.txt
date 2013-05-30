@@ -1,0 +1,4 @@
+Database initialised and connected.
+[90mGET /v1/albums.json [32m200 [90m4ms[0m
+[90mPUT /v1/albums.json [32m200 [90m5ms[0m
+[90mPUT /v1/albums.json [33m403 [90m1ms[0m

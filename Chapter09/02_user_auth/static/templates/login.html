@@ -1,0 +1,49 @@
+<div style='float: right'><a href='/pages/register'>Register</a></div>
+<form name="login" id="login">
+  <div id="error" class="error"></div>
+  <dl>
+    <dt>Email address:</dt>
+    <dd><input type="text" size="30" id="email_address" name="email_address"/></dd>
+    <dt>Password:</dt>
+    <dd><input type="password" size="30" id="password" name="password"/></dd>
+    <dd><input type="submit" value="Login"/>
+  </dl>
+</form>
+
+
+<script type="text/javascript">
+
+$(document).ready(function () {
+    if (window.location.href.match(/(fail)/) != null) {
+        $("#error").html("Invalid login credentials.");
+    }
+});
+
+$("form#login").submit(function (e) {
+  if (!$("input#email_address").val() || !$("input#password").val()) {
+      $("#error").html("You need to enter an email and password.");
+  } else {
+      var info = { email_address: $("input#email_address").val(),
+                   password: $("input#password").val() };
+      $.ajax({
+          type: "POST",
+          url: "/service/login",
+          data: JSON.stringify(info),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (data) {
+              window.location = "/pages/admin/home";
+          },
+          error: function () {
+              var ext = window.location.href.match(/(fail)/) ? "" : "?fail";
+              window.location = window.location + ext;
+              return false;
+          }
+      });
+  }
+  return false;
+});
+
+
+
+</script>

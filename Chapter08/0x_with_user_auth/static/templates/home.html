@@ -1,0 +1,17 @@
+<div style="float: right">
+  <a href="/pages/register">Register</a> | 
+  <a href="/pages/admin/home">Admin</a>
+</div>
+<div id="album_list">
+  <p> There are {{ albums.length }} albums</p>
+  <ul id="albums">
+    {{#albums}}
+      <li class="album">
+        <a href="http://localhost:8080/pages/album/{{name}}">{{name}}</a>
+      </li>
+    {{/albums}}
+    {{^albums}}
+      <li> Sorry, there are currently no albums </li>
+    {{/albums}}
+  </ul>
+</div>

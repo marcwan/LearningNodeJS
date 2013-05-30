@@ -1,0 +1,86 @@
+<form name="add_photo" id="add_photo"
+      enctype="multipart/form-data"
+      method="PUT"
+      action="/v1/albums.json">
+
+ <dl>
+  <dt>Add to Album:</dt>
+  <dd>
+    <select id="albumid" name="albumid">
+      <option value="none">Select album:</option>
+      {{#albums}}
+      <option value="{{name}}">{{name}}</option>
+      {{/albums}}
+    </select>
+  </dd>
+  <dt>Image:</dt>
+  <dd><input id="photo_file" type='file' name="photo_file"/></dd>
+  <dt>Description</dt>
+  <dd><textarea rows="5" cols="30" name="description"></textarea></dd>
+ </dl>
+ <input type="hidden" id="date" name="date" value=""/>
+</form>
+
+<input type="button" id="submit_button" value="Upload"/>
+
+<div id="output"></div>
+
+<script type="text/javascript">
+  $("#send_photo").click(function (e) {
+    // need to update URL in form
+    var s = "/v1/albums/" + $("#albumid").val() + "/photos.json";
+    $("#add_photo").attr("action", s);
+  });
+
+  $(':file').change(function(){
+      var file = this.files[0];
+      name = file.name;
+      size = file.size;
+      type = file.type;
+
+      if (file.name.length < 1) {
+          // optional complaint?
+      }
+      else if (file.size > 10000000) {
+          alert("File is to big");
+      }
+      else if (file.type != 'image/png' && file.type != 'image/jpg'
+               && !file.type != 'image/gif'
+               && file.type != 'image/jpeg' ) {
+          alert("File must be png, jpg, or gif");
+      }
+  });
+
+  $("input#submit_button").click(function (e) {
+      var m = new Date();
+      var dateString =
+          m.getUTCFullYear() +"/"+
+          ("0" + (m.getUTCMonth()+1)).slice(-2) +"/"+
+          ("0" + m.getUTCDate()).slice(-2) + " " +
+          ("0" + m.getUTCHours()).slice(-2) + ":" +
+          ("0" + m.getUTCMinutes()).slice(-2) + ":" +
+          ("0" + m.getUTCSeconds()).slice(-2);
+
+      $("input#date").val(dateString);
+
+      var oOutput = document.getElementById("output");
+      var oData = new FormData(document.forms.namedItem("add_photo"));
+ 
+      var oReq = new XMLHttpRequest();
+      var url = "/v1/albums/" + $("#albumid").val() + "/photos.json";
+      oReq.open("PUT", url, true);
+      oReq.onload = function(oEvent) {
+          if (oReq.status == 200) {
+              oOutput.innerHTML = "\
+Uploaded! Continue adding or <a href='/pages/album/"
+                  + $("#albumid").val() + "'>View Album</a>";
+          } else {
+              oOutput.innerHTML = "\
+Error " + oReq.status + " occurred uploading your file.<br \/>";
+          }
+      };
+ 
+      oReq.send(oData);
+  });
+
+</script>

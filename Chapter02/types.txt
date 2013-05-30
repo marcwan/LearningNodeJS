@@ -1,0 +1,67 @@
+BASIC TYPES:
+
+
+there are several core types:
+
+numbers, strings, booleans, functions, objects
+
+null, undefined are actually both types, although just particular instances of objects, and arrays a special case of objects.
+
+if we have a variable in javascript, type is
+
+typeof x
+
+note arrays will return 'object'.  see section on arrays.
+
+
+
+NUMBERS
+
+- 64bit double precision floating point numbers -- there are no "integer" types in javascript.
+- that means you have 53 bits of precision.
+- if you are going to represent 64bits in javascript, use strings or separate library
+- if you're doing math ops on floating point numbers, be careful
+  - 0.1 + 0.2 != 0.3
+- integer numbers < 53 bits will be great because they can be exactly rep'd
+- dividing by zero gives you (-)Infinity
+- you can convert strings to numbers with parseInt or parseFloat
+  - if they fail, return NaN
+  - isNaN
+- can test for a "valid" number with isFinite()
+
+
+
+BOOLEANS:
+
+- can have the value true or false
+- you can force things to boolean with the Booelan(XXX) function, but rarely necessary
+
+
+STRINGS:
+
+- strings are sequences of unicode characters
+- great for most characters around the world
+- no separate character data type -- can just use 1-char strings
+- to get the length, jut use .length
+var s = "my string";
+console.log(s.length);
+// or
+console.log("my string".length);
+
+many interesting functions on strings:
+
+int str.indexOf("there");
+string "hello there".slice(5, 6) == " " // true
+string "hello there".substr(5, 1) == " " // true
+array "1,2,3,4,5".split(",")
+
+
+
+null is a special value   indicates non-value
+undefined means no such thing or no value set yet
+
+var x;
+-> undefined
+console.log(x);
+-> undefined
+
