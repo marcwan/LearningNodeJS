@@ -1,7 +1,10 @@
 # LearningNodeJS
 
 
-Source code to accompany my book, "Learning Node.JS"
+Source code to accompany my book, "Learning Node.JS".  Every once in a while, I'll
+update to the latest version of Node.JS and let everybody know if there are any 
+changes or updates required to the code (and will make those changes in the source 
+tree).
 
 ## Errors and Corrections
 
