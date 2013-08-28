@@ -177,7 +177,7 @@ function handle_rename_album(req, res) {
     var core_url = req.parsed_url.pathname;
     var parts = core_url.split('/');
     if (parts.length != 4) {
-        send_failure(res, 404, invalid_resource(core_url));
+        send_failure(res, 404, invalid_resource());
         return;
     }
 
