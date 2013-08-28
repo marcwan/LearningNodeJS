@@ -12,6 +12,30 @@ As devastating as it is to admit, there are a couple of errors in the book.
 Those responsible for these egregious violations of editorial process (me)
 have been shot.
 
+### Chapter 6
+
+_p117._ At the top of p117, you can change `d.toString("utf8")` to `d`
+
+Or you could just replace the following:
+
+```
+if (d) {
+    if (typeof d == 'string')
+        res.write(d);
+    else if (typeof d == 'object' && d instanceof Buffer)
+        res.write(d.toString("utf8"));
+}
+```
+
+with:
+
+```
+if (d) 
+    res.write(d);
+```
+
+(note that all the other samples in this chapter got it right, just sample 2 has this)
+
 ### Chapter 8
 
 _p176._  At the top of the page, the `.sort("date")` should read `.sort(sort)`
