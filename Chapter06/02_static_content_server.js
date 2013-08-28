@@ -38,10 +38,7 @@ function serve_static_file(file, res) {
         function () {
             var d = rs.read();
             if (d) {
-                if (typeof d == 'string')
-                    res.write(d);
-                else if (typeof d == 'object' && d instanceof Buffer)
-                    res.write(d.toString('utf8'));
+                res.write(d);
             }
         }
     );
