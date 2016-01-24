@@ -36,6 +36,16 @@ if (d)
 
 (note that all the other samples in this chapter got it right, just sample 2 has this)
 
+_p131._ An incorrect URL is used. Please replace
+
+    http://localhost:8080/page/home
+
+with
+
+    http://localhost:8080/pages/home
+
+There are two places this happens (command line and browsers).
+
 ### Chapter 8
 
 _p176._  At the top of the page, the `.sort("date")` should read `.sort(sort)`
