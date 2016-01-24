@@ -1,13 +1,19 @@
 
+/**
+ * An example of how to use this:
+ *
+ * var mm = require("./01_mymodule.js");
+ * mm.greeter("en").greet();
+ */
 
 function Greeter (lang) {
-    this.language = language;
-    this.greet() = function () {
+    this.language = lang;
+    this.greet = function () {
         switch (this.language) {
-        case "en": return "Hello!";
-        case "de": return "Hallo!";
-        case "jp": return "こんにちは!";
-        default: return "No speaka that language";
+          case "en": return "Hello!";
+          case "de": return "Hallo!";
+          case "jp": return "こんにちは!";
+          default: return "No speaka that language";
         }
     }
 }
