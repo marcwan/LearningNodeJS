@@ -4,6 +4,6 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "async": "0.1.x"
+    "async": "1.x"
   }
 }

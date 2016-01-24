@@ -144,9 +144,9 @@ function send_success(res, data) {
     res.end(JSON.stringify(output) + "\n");
 }
 
-function send_failure(res, code, err) {
+function send_failure(res, server_code, err) {
     var code = (err.code) ? err.code : err.name;
-    res.writeHead(code, { "Content-Type" : "application/json" });
+    res.writeHead(server_code, { "Content-Type" : "application/json" });
     res.end(JSON.stringify({ error: code, message: err.message }) + "\n");
 }
 
