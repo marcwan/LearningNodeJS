@@ -19,7 +19,7 @@ function FileObject () {
         fs.open(this.filename, 'r', function (err, handle) {
             if (err) {
                 console.log("Can't open: " + self.filename);
-                callback(null, false);
+                callback(err, false);
                 return;
             }
 
