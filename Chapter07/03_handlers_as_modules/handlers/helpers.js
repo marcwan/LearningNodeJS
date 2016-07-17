@@ -16,9 +16,9 @@ exports.send_success = function(res, data) {
 }
 
 
-exports.send_failure = function(res, code, err) {
+exports.send_failure = function(res, server_code, err) {
     var code = (err.code) ? err.code : err.name;
-    res.writeHead(code, { "Content-Type" : "application/json" });
+    res.writeHead(server_code, { "Content-Type" : "application/json" });
     res.end(JSON.stringify({ error: code, message: err.message }) + "\n");
 }
 
