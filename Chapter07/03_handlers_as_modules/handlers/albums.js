@@ -127,7 +127,7 @@ function load_album(album_name, page, page_size, callback) {
                         callback(err);
                     } else {
                         var ps = page_size;
-                        var photos = only_files.splice(page * ps, ps);
+                        var photos = only_files.slice(page * ps, ps);
                         var obj = { short_name: album_name,
                                     photos: photos };
                         callback(null, obj);
