@@ -64,7 +64,7 @@ function load_album(album_name, page, page_size, callback) {
                 if (index == files.length) {
                     var ps;
                     // slice fails gracefully if params are out of range
-                    ps = only_files.splice(page * page_size, page_size);
+                    ps = only_files.slice(page * page_size, page_size);
                     var obj = { short_name: album_name,
                                 photos: ps };
                     callback(null, obj);
