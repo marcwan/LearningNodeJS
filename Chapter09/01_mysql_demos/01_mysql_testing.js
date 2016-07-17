@@ -109,7 +109,7 @@ async.waterfall([
             { filename: "photo_03.jpg",
               albumid: "japan2010",
               description: "shinjuku is nice",
-              date: "2010/06/12 08:80:40" },
+              date: "2010/06/12 08:40:40" },
             { filename: "photo_04.jpg",
               albumid: "japan2010",
               description: "eating sushi",
