@@ -121,7 +121,7 @@ exports.create_album = function (req, res) {
     ],
     function (err, results) {
         if (err) {
-            helpers.send_failure(res, err);
+            helpers.send_failure(res, helpers.http_code_for_error(err), err);
         } else {
             var a = new Album(results);
             helpers.send_success(res, {album: a.response_obj() });
@@ -142,9 +142,10 @@ exports.album_by_name = function (req, res) {
     ],
     function (err, results) {
         if (err) {
-            helpers.send_failure(res, err);
+            helpers.send_failure(res, helpers.http_code_for_error(err), err);
         } else if (!results) {
-            helpers.send_failure(res, helpers.no_such_album());
+            err = helpers.no_such_album();
+            helpers.send_failure(res, helpers.http_code_for_error(err), err);
         } else {
             var a = new Album(album_data);
             helpers.send_success(res, { album: a.response_obj() });
@@ -157,7 +158,7 @@ exports.album_by_name = function (req, res) {
 exports.list_all = function (req, res) {
     album_data.all_albums("date", true, 0, 25, function (err, results) {
         if (err) {
-            helpers.send_failure(res, err);
+            helpers.send_failure(res, helpers.http_code_for_error(err), err);
         } else {
             var out = [];
             if (results) {
@@ -208,7 +209,7 @@ exports.photos_for_album = function(req, res) {
     ],
     function (err, results) {
         if (err) {
-            helpers.send_failure(res, err);
+            helpers.send_failure(res, helpers.http_code_for_error(err), err);
             return;
         }
         if (!results) results = [];
@@ -248,7 +249,7 @@ exports.add_photo_to_album = function (req, res) {
     ],
     function (err, p) {
         if (err) {
-            helpers.send_failure(res, err);
+            helpers.send_failure(res, helpers.http_code_for_error(err), err);
             return;
         }
         var out = { photo: p.response_obj(),

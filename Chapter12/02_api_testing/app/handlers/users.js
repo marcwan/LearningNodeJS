@@ -79,7 +79,7 @@ exports.register = function (req, res) {
     ],
     function (err, user_data) {
         if (err) {
-            helpers.send_failure(res, err);
+            helpers.send_failure(res, helpers.http_code_for_error(err), err);
         } else {
             var u = new User(user_data);
             helpers.send_success(res, {user: u.response_obj() });
@@ -131,7 +131,7 @@ exports.login = function (req, res) {
         if (!err || err.message == "already_logged_in") {
             helpers.send_success(res, { logged_in: true });
         } else {
-            helpers.send_failure(res, err);
+            helpers.send_failure(res, helpers.http_code_for_error(err), err);
         }
     });
 };
