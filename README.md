@@ -12,6 +12,30 @@ As devastating as it is to admit, there are a couple of errors in the book.
 Those responsible for these egregious violations of editorial process (me)
 have been shot.
 
+### Chapter 4
+
+The following function `send_failure` occurs in a few places in this chapter:
+
+```
+function send_failure(res, code, err) {
+    var code = (err.code) ? err.code : err.name;
+    res.writeHead(code, { "Content-Type" : "application/json" });
+    res.end(JSON.stringify({ error: code, message: err.message }) + "\n");
+}
+```
+
+The problem is that the local variable `code` overwrites the incoming variable `code`,
+which is bad. A better version of these functions is:
+
+```
+function send_failure(res, server_code, err) {
+    var code = (err.code) ? err.code : err.name;
+    res.writeHead(server_code, { "Content-Type" : "application/json" });
+    res.end(JSON.stringify({ error: code, message: err.message }) + "\n");
+}
+```
+
+
 ### Chapter 6
 
 _p117._ At the top of p117, you can change `d.toString("utf8")` to `d`
