@@ -35,6 +35,18 @@ function send_failure(res, server_code, err) {
 }
 ```
 
+Elsewhere, in the function `load_albums`, There is the line:
+
+```
+ps = only_files.splice(page * page_size, page_size);
+```
+
+`splice` is for inserting into an array. We want `slice` here:
+
+```
+ps = only_files.slice(page * page_size, page_size);
+```
+
 
 ### Chapter 6
 
