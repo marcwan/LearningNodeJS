@@ -8,7 +8,8 @@ changes in the source tree).
 
 ## First Edition
 
-Source code for the first edition is available via the tag v1.
+Source code for the first edition is available via the
+[branch v1](https://github.com/marcwan/LearningNodeJS/tree/v1).
 
 
 ## Errors and Corrections
