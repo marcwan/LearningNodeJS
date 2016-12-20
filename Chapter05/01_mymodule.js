@@ -29,3 +29,4 @@ exports.goodbye = function () {
 exports.greeter = function (lang) {
     return new Greeter(lang);
 }
+

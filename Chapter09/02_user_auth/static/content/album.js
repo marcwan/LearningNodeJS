@@ -16,6 +16,10 @@ $(function(){
             tmpl = d;
         });
 
+        if (readCookie("username")) {
+            tdata.username = readCookie("username");
+        }
+
         var p = $.urlParam("page");
         var ps = $.urlParam("page_size");
         if (p < 0) p = 0;

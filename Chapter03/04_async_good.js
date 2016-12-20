@@ -9,7 +9,7 @@ fs.open(
             handle, buf, 0, 100000, null,
             function (err, length) {
                 console.log(buf.toString('utf8', 0, length));
-                fs.close(handle, function () { /* don't care */ });
+                fs.close(handle, function () { /* Don't care */ });
             }
         );
     }

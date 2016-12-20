@@ -7,3 +7,4 @@ arr[1] = 2;
 arr["cat"] = 'meow';
 
 console.log(arr.length);
+console.log(arr);

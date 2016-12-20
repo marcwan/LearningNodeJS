@@ -6,7 +6,7 @@ var contents;
 // INCEPTION BWAAAAAAA!!!!
 var rs = fs.createReadStream("01_simple_stream.js");
 
-rs.on('readable', function () {
+rs.on('readable', () => {
     var str;
     var d = rs.read();
     if (d) {
@@ -24,7 +24,7 @@ rs.on('readable', function () {
     }
 });
 
-rs.on('end', function () {
+rs.on('end', () => {
     console.log("read in the file contents: ");
     console.log(contents.toString('utf8'));
 });

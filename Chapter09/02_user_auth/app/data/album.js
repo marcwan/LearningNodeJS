@@ -1,6 +1,6 @@
 
 var fs = require('fs'),
-    local = require('../local.config.js'),
+    local = require('../local.config.json'),
     db = require('./db.js'),
     path = require("path"),
     async = require('async'),
@@ -24,16 +24,15 @@ exports.create_album = function (data, callback) {
                                   "description" ]);
                 if (!backhelp.valid_filename(data.name))
                     throw invalid_album_name();
+
+                cb(null);
             } catch (e) {
                 cb(e);
             }
-
-            db.db(cb);
         },
 
-        function (dbclient, cb) {
-            dbc = dbclient;
-            dbc.query(
+        function (cb) {
+            db.dbpool.query(
                 "INSERT INTO Albums VALUES (?, ?, ?, ?)",
                 [ data.name, data.title, data.date, data.description ],
                 cb);
@@ -59,26 +58,21 @@ exports.create_album = function (data, callback) {
         } else {
             callback(err, err ? null : data);
         }
-
-        if (dbc) dbc.end();
     }); 
 };
 
 
 exports.album_by_name = function (name, callback) {
-    var dbc;
-
     async.waterfall([
         function (cb) {
             if (!name)
                 cb(backhelp.missing_data("album name"));
             else
-                db.db(cb);
+                cb(null);
         },
 
-        function (dbclient, cb) {
-            dbc = dbclient;
-            dbc.query(
+        function (cb) {
+            db.dbpool.query(
                 "SELECT * FROM Albums WHERE name = ?",
                 [ name ],
                 cb);
@@ -86,7 +80,6 @@ exports.album_by_name = function (name, callback) {
 
     ],
     function (err, results) {
-        if (dbc) dbc.end();
         if (err) {
             callback (err);
         } else if (!results || results.length == 0) {
@@ -99,45 +92,30 @@ exports.album_by_name = function (name, callback) {
 
 
 exports.photos_for_album = function (album_name, skip, limit, callback) {
-    var dbc;
-
     async.waterfall([
         function (cb) {
             if (!album_name)
                 cb(backhelp.missing_data("album name"));
             else
-                db.db(cb);
+                cb(null);
         },
 
-        function (dbclient, cb) {
-            dbc = dbclient;
-            dbc.query(
+        function (cb) {
+            db.dbpool.query(
                 "SELECT * FROM Photos WHERE album_name = ? LIMIT ?, ?",
                 [ album_name, skip, limit ],
                 cb);
         },
 
     ],
-    function (err, results) {
-        if (dbc) dbc.end();
-        if (err) {
-            callback (err);
-        } else {
-            callback(null, results);
-        }
-    });
+    callback);
 };
 
 
 exports.all_albums = function (sort_by, desc, skip, count, callback) {
-    var dbc;
     async.waterfall([
         function (cb) {
-            db.db(cb);
-        },
-        function (dbclient, cb) {
-            dbc = dbclient;
-            dbc.query(
+            db.dbpool.query(
                 "SELECT * FROM Albums ORDER BY ? " 
                     + (desc ? "DESC" : "ASC")
                     + " LIMIT ?, ?",
@@ -145,14 +123,7 @@ exports.all_albums = function (sort_by, desc, skip, count, callback) {
                 cb);
         }
     ],
-    function (err, results) {
-        if (dbc) dbc.end();
-        if (err) {
-            callback (err);
-        } else {
-            callback(null, results);
-        }
-    });
+    callback);
 };
 
 
@@ -170,16 +141,15 @@ exports.add_photo = function (photo_data, path_to_photo, callback) {
                 photo_data.filename = base_fn;
                 if (!backhelp.valid_filename(photo_data.albumid))
                     throw invalid_album_name();
+                cb(null);
             } catch (e) {
                 cb(e);
                 return;
             }
-            db.db(cb);
         },
 
-        function (dbclient, cb) {
-            dbc = dbclient;
-            dbc.query(
+        function (cb) {
+            db.dbpool.query(
                 "INSERT INTO Photos VALUES (?, ?, ?, ?)",
                 [ photo_data.albumid, base_fn, photo_data.description,
                   photo_data.date ],
@@ -187,7 +157,8 @@ exports.add_photo = function (photo_data, path_to_photo, callback) {
         },
 
         // now copy the temp file to static content
-        function (results, cb) {
+        function (results, fields, cb) {
+            console.log(arguments);
             write_succeeded = true;
             var save_path = local.config.static_content + "albums/"
                 + photo_data.albumid + "/" + base_fn;
@@ -206,7 +177,6 @@ exports.add_photo = function (photo_data, path_to_photo, callback) {
             pd.filename = base_fn;
             callback(null, pd);
         }
-        if (dbc) dbc.end();
     });
 };
 

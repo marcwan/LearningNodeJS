@@ -6,7 +6,6 @@ var helpers = require('./helpers.js'),
 
 exports.version = "0.1.0";
 
-
 /**
  * Album class.
  */
@@ -35,8 +34,7 @@ Album.prototype.photos = function (pn, ps, callback) {
         return;
     }
 
-    album_data.photos_for_album(
-        this.name,
+    album_data.photos_for_album(this.name,
         pn, ps,
         function (err, results) {
             if (err) {
@@ -72,7 +70,6 @@ Album.prototype.add_photo = function (data, path, callback) {
 
 
 
-
 /**
  * Photo class.
  */
@@ -97,7 +94,6 @@ Photo.prototype.response_obj = function() {
     };
 };
 
-
 /**
  * Album module methods.
  */
@@ -110,7 +106,7 @@ exports.create_album = function (req, res) {
                 return;
             }
 
-            // UNDONE: we should add some code to make sure the album
+            // TODO: we should add some code to make sure the album
             // doesn't already exist!
             cb(null);
         },
@@ -144,8 +140,9 @@ exports.album_by_name = function (req, res) {
         if (err) {
             helpers.send_failure(res, helpers.http_code_for_error(err), err);
         } else if (!results) {
-            err = helpers.no_such_album();
-            helpers.send_failure(res, helpers.http_code_for_error(err), err);
+            helpers.send_failure(res,
+                                 helpers.http_code_for_error(err),
+                                 helpers.no_such_album());
         } else {
             var a = new Album(album_data);
             helpers.send_success(res, { album: a.response_obj() });
@@ -154,9 +151,8 @@ exports.album_by_name = function (req, res) {
 };
 
 
-
 exports.list_all = function (req, res) {
-    album_data.all_albums("date", true, 0, 25, function (err, results) {
+    album_data.all_albums("date", true, 0, 25, (err, results) => {
         if (err) {
             helpers.send_failure(res, helpers.http_code_for_error(err), err);
         } else {
@@ -227,9 +223,9 @@ exports.add_photo_to_album = function (req, res) {
         function (cb) {
             if (!req.body)
                 cb(helpers.missing_data("POST data"));
-            else if (!req.files || !req.files.photo_file)
+            else if (!req.file)
                 cb(helpers.missing_data("a file"));
-            else if (!helpers.is_image(req.files.photo_file.name))
+            else if (!helpers.is_image(req.file.originalname))
                 cb(helpers.not_image());
             else
                 // get the album
@@ -243,8 +239,8 @@ exports.add_photo_to_album = function (req, res) {
             }
 
             album = new Album(album_data);
-            req.body.filename = req.files.photo_file.name;
-            album.add_photo(req.body, req.files.photo_file.path, cb);
+            req.body.filename = req.file.originalname;
+            album.add_photo(req.body, req.file.path, cb);
         }
     ],
     function (err, p) {

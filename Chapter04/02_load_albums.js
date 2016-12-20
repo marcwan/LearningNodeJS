@@ -26,8 +26,7 @@ function handle_incoming_request(req, res) {
             return;
         }
 
-        var out = { error: null,
-                    data: { albums: albums }};
+        var out = { error: null, data: { albums: albums } };
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(out) + "\n");
     });

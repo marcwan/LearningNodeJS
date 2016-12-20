@@ -1,7 +1,8 @@
-var express = require('express');
+var express = require('express'),
+    morgan = require('morgan');
 
 var one = express();
-one.use(express.logger('dev'));
+one.use(morgan('dev'));
 one.get("/", function(req, res){
     console.log(req);
     res.send("\nWhat part of 'highly classified' do you not understand?!!\n")

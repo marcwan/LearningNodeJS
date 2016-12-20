@@ -1,23 +1,11 @@
-var Db = require('mongodb').Db,
-    Connection = require('mongodb').Connection,
-    Server = require('mongodb').Server,
+var MongoClient = require('mongodb').MongoClient,
     async = require('async'),
-    local = require("../local.config.js");
+    local = require("../local.config.json");
 
-var host = local.config.db_config.host
-    ? local.config.db_config.host
-    : 'localhost';
-var port = local.config.db_config.port
-    ? local.config.db_config.port
-    : Connection.DEFAULT_PORT;
-var ps = local.config.db_config.poolSize
-    ? local.config.db_config.poolSize : 5;
-
-var db = new Db('PhotoAlbums', 
-                new Server(host, port, 
-                           { auto_reconnect: true,
-                             poolSize: ps}),
-                { w: 1 });
+/**
+ * We'll keep this private and not share it with anybody.
+ */
+var db;
 
 /**
  * Currently for initialisation, we just want to open
@@ -29,13 +17,19 @@ exports.init = function (callback) {
         // 1. open database connection
         function (cb) {
             console.log("\n** 1. open db");
-            db.open(cb);
+            var url = local.config.db_config.host_url;
+            MongoClient.connect(url, (err, dbase) => {
+                if (err) return cb(err);
+                console.log("**    Connected to server");
+                db = dbase;
+                cb(null);
+            });
         },
 
         // 2. create collections for our albums and photos. if
         //    they already exist, then we're good.
-        function (db_conn, cb) {
-            console.log("\n** 2. create albums and photos collections.");
+        function (cb) {
+            console.log("** 2. create albums and photos collections.");
             db.collection("albums", cb);
         },
 

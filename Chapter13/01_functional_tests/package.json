@@ -1,0 +1,9 @@
+{
+  "name": "Functional-testing-demo",
+  "description": "Some simple functional tests",
+  "version": "0.0.2",
+  "private": true,
+  "dependencies": {
+    "nodeunit": "0.x"
+  }
+}

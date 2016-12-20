@@ -16,49 +16,39 @@ Album.prototype.photos = function (callback) {
         return;
     }
 
-    var self = this;
+    fs.readdir(this.path, (err, files) => {
+        if (err) {
+            if (err.code == "ENOENT") {
+                callback(no_such_album());
+            } else {
+                callback(make_error("file_error", JSON.stringify(err)));
+            }
+            return;
+        }
 
-    fs.readdir(
-        self.path,
-        function (err, files) {
-            if (err) {
-                if (err.code == "ENOENT") {
-                    callback(no_such_album());
-                } else {
-                    callback(make_error("file_error",
-                                        JSON.stringify(err)));
-                }
+        var only_files = [];
+
+        var iterator = (index) => {
+            if (index == files.length) {
+                callback(null, only_files);
                 return;
             }
 
-            var only_files = [];
-
-            (function iterator(index) {
-                if (index == files.length) {
-                    callback(null, only_files);
+            fs.stat(this.path + "/" + files[index], (err, stats) => {
+                if (err) {
+                    callback(make_error("file_error",
+                                        JSON.stringify(err)));
                     return;
                 }
-
-                fs.stat(
-                    self.path + "/" + files[index],
-                    function (err, stats) {
-                        if (err) {
-                            callback(make_error("file_error",
-                                                JSON.stringify(err)));
-                            return;
-                        }
-                        if (stats.isFile()) {
-                            only_files.push(files[index]);
-                        }
-                        iterator(index + 1)
-                    }                    
-                );
-            })(0);
-        }
-    );
+                if (stats.isFile()) {
+                    only_files.push(files[index]);
+                }
+                iterator(index + 1)
+            });
+        };
+        iterator(0);
+    });
 };
-
-
 
 exports.create_album = function (path) {
     return new Album(path);

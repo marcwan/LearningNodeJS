@@ -30,7 +30,6 @@ exports.user_by_email_address = function (email, callback) {
 };
 
 exports.register = function (email, display_name, password, callback) {
-    var dbc;
     var userid;
     async.waterfall([
         // validate ze params
@@ -45,14 +44,8 @@ exports.register = function (email, display_name, password, callback) {
                 cb(null);
         },
 
-        // get a connection
-        function (cb) {
-            db.db(cb);
-        },
-
         // generate a password hash
-        function (dbclient, cb) {
-            dbc = dbclient;
+        function (cb) {
             bcrypt.hash(password, 10, cb);
         },
 
@@ -60,7 +53,7 @@ exports.register = function (email, display_name, password, callback) {
         function (hash, cb) {
             userid = uuid();
             var now = Math.round((new Date()).getTime() / 1000);
-            dbc.query(
+            db.dbpool.query(
                 "INSERT INTO Users VALUES (?, ?, ?, ?, ?, NULL, 0)",
                 [ userid, email.trim(), display_name.trim(), hash, now ],
                 cb);
@@ -72,7 +65,6 @@ exports.register = function (email, display_name, password, callback) {
         }
     ],
     function (err, user_data) {
-        if (dbc) dbc.end();
         if (err) {
             if (err.code
                 && (err.code == 'ER_DUP_KEYNAME'
@@ -88,20 +80,12 @@ exports.register = function (email, display_name, password, callback) {
 };
 
 
-
-
 function user_by_field (field, value, callback) {
     var dbc;
     async.waterfall([
-        // get a connection
-        function (cb) {
-            db.db(cb);
-        },
-
         // fetch the user.
-        function (dbclient, cb) {
-            dbc = dbclient;
-            dbc.query(
+        function (cb) {
+            db.dbpool.query(
                 "SELECT * FROM Users WHERE " + field
                     + " = ? AND deleted = false",
                 [ value ],
@@ -116,7 +100,6 @@ function user_by_field (field, value, callback) {
         }
     ],
     function (err, user_data) {
-        if (dbc) dbc.end();
         if (err) {
             callback (err);
         } else {

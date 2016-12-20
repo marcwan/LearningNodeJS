@@ -5,7 +5,7 @@
   <dl>
     <dt>Email address:</dt>
     <dd><input type="text" size="30" id="email_address" name="email_address"/></dd>
-    <dt>Display Name:</dt>
+    <dt>Username:</dt>
     <dd><input type="text" size="30" id="display_name" name="display_name"/></dd>
     <dt>Password:</dt>
     <dd><input type="password" size="30" id="password" name="password"/></dd>
@@ -43,8 +43,15 @@ $("form#register").submit(function (e) {
           success: function (data) {
               window.location = "/pages/admin/home";
           },
-          error: function () {
-              var ext = window.location.href.match(/(fail)/) ? "" : "?fail";
+          error: function (data) {
+              try {
+                  var info = JSON.parse(data.responseText);
+                  if (info.error && info.message) {
+                      alert(info.error + ": " + info.message);
+                  }
+              } catch (e) { }
+              var ext = window.location.href.match(/(fail)/)
+                  ? "" : "?fail";
               window.location = window.location + ext;
               return false;
           }

@@ -1,4 +1,9 @@
+<a href="/">Home</a>
 <div id="album_page">
+  <p> <strong>Title:</strong> {{ album_data.title }} </p>
+  <p> <strong>Date:</strong> {{ album_data.date }} </p>
+  <p> <strong>Description:</strong> {{ album_data.description }} </p>
+  <p> <strong>Photos:</strong></p>
   {{#has_photos}}
   <p> There are {{ has_photos }} photos in this album</p>
   {{/has_photos}}

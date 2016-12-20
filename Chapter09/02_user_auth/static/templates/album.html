@@ -1,4 +1,15 @@
-<div style="float: right"><a href="/pages/admin/home">Admin</a></div>
+<div style="float: right">
+{{#username}}
+  Hi, {{username}} <a href="/service/logout">Logout</a> |
+  <a href="/pages/admin/home">Admin</a>
+{{/username}}
+{{^username}}
+  <a href="/pages/login">Login</a> | 
+  <a href="/pages/register">Register</a> 
+{{/username}}
+</div>
+
+
 <div id="album_page">
   {{#has_photos}}
   <p> There are {{ has_photos }} photos in this album</p>

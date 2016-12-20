@@ -1,14 +1,15 @@
 var mysql = require('mysql'),
-    local = require("../local.config.js");
+    local = require("../local.config.json");
 
-exports.db = function (callback) {
-
+exports.init = function () {
     conn_props = local.config.db_config;
-    var c = mysql.createConnection({
-        host:     conn_props.host,
-        user:     conn_props.user,
-        password: conn_props.password,
-        database: conn_props.database
+    exports.dbpool = mysql.createPool({
+        connectionLimit: conn_props.pooled_connections,
+        host:            conn_props.host,
+        user:            conn_props.user,
+        password:        conn_props.password,
+        database:        conn_props.database
     });
-    callback(null, c);
 };
+
+exports.dbpool = null;

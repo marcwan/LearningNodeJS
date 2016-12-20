@@ -38,7 +38,6 @@ User.prototype.response_obj = function () {
 };
 
 
-
 exports.register = function (req, res) {
     async.waterfall([
         function (cb) {
@@ -62,13 +61,6 @@ exports.register = function (req, res) {
                 cb);
         },
 
-        // mark user as logged in
-        function (user_data, cb) {
-            req.session.logged_in = true;
-            req.session.logged_in_display_name = req.body.display_name;
-            req.session.logged_in_date = new Date();
-            cb(null, user_data);
-        }
     ],
     function (err, user_data) {
         if (err) {
@@ -80,57 +72,15 @@ exports.register = function (req, res) {
     });
 };
 
-
-exports.login = function (req, res) {
-    var em = req.body.email_address
-        ? req.body.email_address.trim().toLowerCase()
-        : "";
-
-    async.waterfall([
-        function (cb) {
-            if (!em)
-                cb(helpers.missing_data("email_address"));
-            else if (req.session
-                     && req.session.logged_in_email_address == em)
-                cb(helpers.error("already_logged_in", ""));
-            else if (!req.body.password)
-                cb(helpers.missing_data("password"));
-            else
-                cb(null);
-        },
-
-        // first get the user by the email address.
-        function (cb) {
-            user_data.user_by_email_address(em, cb);
-        },
-
-        // check the password
-        function (user_data, cb) {
-            var u = new User(user_data);
-            u.check_password(req.body.password, cb);
-        },
-
-        function (auth_ok, cb) {
-            if (!auth_ok) {
-                cb(helpers.auth_failed());
-                return;
-            }
-
-            req.session.logged_in = true;
-            req.session.logged_in_email_address = req.body.email_address;
-            req.session.logged_in_date = new Date();
-            cb(null);
-        }
-    ],
-    function (err, results) {
-        if (!err || err.message == "already_logged_in") {
-            helpers.send_success(res, { logged_in: true });
+exports.user_by_uuid = function (uuid, callback) {
+    user_data.user_by_uuid(uuid, (err, user_data) => {
+        if (err) {
+            callback(err);
         } else {
-            helpers.send_failure(res, helpers.http_code_for_error(err), err);
+            callback(null, new User(user_data));
         }
     });
 };
-
 
 exports.user_by_display_name = function (req, res) {
     async.waterfall([
@@ -149,38 +99,29 @@ exports.user_by_display_name = function (req, res) {
 };
 
 
-exports.authenticate_API = function (un, pw, callback) {
-    if (req.session && req.session.logged_in
-        && req.session.logged_in_email_address == un) {
-        callback(null, un);
-        return;
-    } 
-
+exports.authenticate_user = function (un, pw, callback) {
+    var user_object;
     async.waterfall([
         function (cb) {
-            user_data.user_by_email_address(un, cb);
+            user_data.user_by_display_name(un, cb);
         },
 
         function (user_data, cb) {
-            var u = new User(user_data);
-            u.check_password(pw, cb);
+            user_object = new User(user_data);
+            user_object.check_password(pw, cb);
         }
     ],
-    function (err, results) {
+    function (err, auth_ok) {
         if (!err) {
-            callback(null, un);
+            if (auth_ok) {
+                callback(null, user_object);
+            } else {
+                callback(helpers.error("invalid_credentials",
+                    "The given username/password are invalid."));
+            }
         } else {
-            callback(new Error("bogus credentials"));
+            callback(err);
         }
     });
 };
 
-exports.logged_in = function (req, res) {
-    var li = (req.session && req.session.logged_in_email_address);
-    helpers.send_success(res, { logged_in: li });
-};
-
-exports.logout = function (req, res) {
-    req.session = null;
-    helpers.send_success(res, { logged_out: true });
-};

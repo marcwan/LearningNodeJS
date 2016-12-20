@@ -1,0 +1,14 @@
+{
+  "name": "Round-Robin-Demo",
+  "description": "A little proxy server to round-robin requests",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "connect-memcached" : "0.x",
+    "cookie-parser": "1.x",
+    "express": "4.x",
+    "express-session": "1.x",
+    "http-proxy": "1.x",
+    "morgan": "1.x"
+  }
+}

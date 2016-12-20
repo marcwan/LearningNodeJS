@@ -1,13 +1,17 @@
 
-var express = require('express');
-var MemStore = express.session.MemoryStore;
+var express = require('express'),
+    morgan = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    session = require('express-session');
+
 
 var app = express()
-    .use(express.logger('dev'))
-    .use(express.cookieParser())
-    .use(express.session({ secret: "cat on keyboard",
-                           cookie: { maxAge: 1800000 },
-                           store: new MemStore()}))
+    .use(morgan('dev'))
+    .use(cookieParser())
+    .use(session({ secret: "blargleipoajsdfoiajf",
+                   resave: false,
+                   saveUninitialized: true,
+                   cookie: { maxAge: 1800000 } }))
     .use(function(req, res){
         var x = req.session.last_access;
         req.session.last_access = new Date();

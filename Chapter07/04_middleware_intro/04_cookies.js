@@ -1,9 +1,11 @@
 
-var express = require('express');
+var express = require('express'),
+    morgan = require('morgan'),
+    cookieParser = require('cookie-parser');
 
 var app = express()
-    .use(express.logger('dev'))
-    .use(express.cookieParser())
+    .use(morgan('dev'))
+    .use(cookieParser())
     .use(function(req, res){
         res.cookie("pet", "Zimbu the Monkey",
                    { expires: new Date(Date.now() + 86400000) });

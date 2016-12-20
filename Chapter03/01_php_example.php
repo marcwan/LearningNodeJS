@@ -1,3 +1,5 @@
+<?php
+
 $file = fopen('info.txt', 'r');
 // wait until file is open
 

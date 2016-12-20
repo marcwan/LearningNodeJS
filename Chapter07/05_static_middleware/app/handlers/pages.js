@@ -14,7 +14,7 @@ exports.generate = function (req, res) {
         'basic.html',
         function (err, contents) {
             if (err) {
-                helpers.send_failure(res, 500, err);
+                send_failure(res, err);
                 return;
             }
 

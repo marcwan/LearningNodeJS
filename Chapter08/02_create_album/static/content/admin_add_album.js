@@ -1,13 +1,13 @@
-$(function(){
+$(function (){
  
     var tmpl,   // Main template HTML
     tdata = {};  // JSON data object that feeds the template
  
     // Initialise page
-    var initPage = function() {
+    var initPage = function () {
  
         // Load the HTML template
-        $.get("/templates/admin_add_album.html", function(d){
+        $.get("/templates/admin_add_album.html", function (d){
             tmpl = d;
         });
  

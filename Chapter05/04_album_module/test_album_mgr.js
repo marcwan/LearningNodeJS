@@ -8,7 +8,7 @@ amgr.albums('./', function (err, albums) {
         return;
     }
 
-    (function iterator(index) {
+    var iterator = (index) => {
         if (index == albums.length) {
             console.log("Done");
             return;
@@ -25,6 +25,7 @@ amgr.albums('./', function (err, albums) {
             console.log("");
             iterator(index + 1);
         });
-    })(0);
+    }
+    iterator(0);
 });
 

@@ -11,6 +11,10 @@ $(function(){
             tmpl = d;
         });
  
+        if (readCookie("username")) {
+            tdata.username = readCookie("username");
+        }
+
         // When AJAX calls are complete parse the template 
         // replacing mustache tags with vars
         $(document).ajaxStop(function () {

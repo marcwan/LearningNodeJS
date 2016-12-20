@@ -34,7 +34,7 @@ fo.filename = "file_that_does_not_exist";
 
 fo.file_exists(function (err, results) {
     if (err) {
-        console.log("Aw, bummer: " + JSON.stringify(err));
+        console.log("\nError looking for file: : " + JSON.stringify(err));
         return;
     }
 

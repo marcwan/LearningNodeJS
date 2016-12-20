@@ -33,11 +33,11 @@ fo.filename = "file_that_does_not_exist";
 
 fo.file_exists(function (err, results) {
     if (err) {
-        console.log("WAT: " + JSON.stringify(err));
+        console.log("\nError opening file: " + JSON.stringify(err));
         return;
     }
 
-    console.log(results ? "file exists!!!" : "bummer!");
+    console.log("file exists!!!");
 });
 
 

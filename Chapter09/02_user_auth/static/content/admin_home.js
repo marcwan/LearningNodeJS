@@ -5,11 +5,15 @@ $(function(){
  
     // Initialise page
     var initPage = function() {
- 
+
         // Load the HTML template
         $.get("/templates/admin_home.html", function(d){
             tmpl = d;
         });
+
+        if (readCookie("username")) {
+            tdata.username = readCookie("username");
+        }
 
         // When AJAX calls are complete parse the template 
         // replacing mustache tags with vars

@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "async": "1.x"
+    "async": "2.x",
+    "bluebird": "3.x"
   }
 }

@@ -1,7 +1,6 @@
 
 var fs = require('fs');
 
-
 exports.verify = function (data, field_names) {
     for (var i = 0; i < field_names.length; i++) {
         if (!data[field_names[i]]) {

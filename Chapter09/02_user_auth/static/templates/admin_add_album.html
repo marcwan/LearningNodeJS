@@ -1,3 +1,9 @@
+<div style="float: right">
+{{#username}}
+  Hi, {{username}} <a href="/service/logout">Logout</a>
+{{/username}}
+</div>
+
 <form name="create_album" id="create_album"
       enctype="multipart/form-data"
       method="PUT"
@@ -7,7 +13,7 @@
  <dl>
   <dt>Album Name:</dt>
   <dd><input type='text' name='name' id="name" size='30'/></dd>
-  <dt>Title::</dt>
+  <dt>Title:</dt>
   <dd><input id="photo_file" type="text" name="title" size="30"/></dd>
   <dt>Description:</dt>
   <dd><textarea rows="5" cols="30" name="description"></textarea></dd>

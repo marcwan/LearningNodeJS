@@ -1,0 +1,9 @@
+{
+  "name": "Mustache-Node-Templates-Demo",
+  "description": "Demonstrates client-side templates with mustache and Node",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "async": "2.x"
+  }
+}

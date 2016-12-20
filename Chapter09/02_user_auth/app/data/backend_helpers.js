@@ -24,7 +24,6 @@ exports.file_error = function (err) {
 }
 
 
-
 /**
  * Possible signatures:
  *  src, dst, callback
@@ -69,7 +68,6 @@ exports.file_copy = function () {
     
     fs.stat(dst, copy);
 };
-
 
 
 exports.valid_filename = function (fn) {

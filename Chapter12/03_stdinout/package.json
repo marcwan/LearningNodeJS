@@ -1,0 +1,9 @@
+{
+  "name": "Readline-questions-demo",
+  "description": "Demonstrates questions in readline",
+  "version": "0.0.2",
+  "private": true,
+  "dependencies": {
+    "async": "2.x"
+  }
+}

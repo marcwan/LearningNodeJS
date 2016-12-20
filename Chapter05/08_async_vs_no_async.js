@@ -4,7 +4,7 @@ var async = require('async');
 
 
 function load_file_contents(path, callback) {
-    fs.open(path, 'r', function (err, f) {
+    fs.open(path, 'r', (err, f) => {
         if (err) {
             callback(err);
             return;
@@ -13,20 +13,20 @@ function load_file_contents(path, callback) {
                                 "bad file handle from fs.open"));
             return;
         }
-        fs.fstat(f, function (err, stats) {
+        fs.fstat(f, (err, stats) => {
             if (err) {
                 callback(err);
                 return;
             }
             if (stats.isFile()) {
-                var b = new Buffer(10000);
-                fs.read(f, b, 0, 10000, null, function (err, br, buf) {
+                var b = new Buffer(stats.size);
+                fs.read(f, b, 0, stats.size, null, (err, br, buf) => {
                     if (err) {
                         callback(err);
                         return;
                     }
 
-                    fs.close(f, function (err) {
+                    fs.close(f, (err) => {
                         if (err) {
                             callback(err);
                             return;
@@ -42,8 +42,6 @@ function load_file_contents(path, callback) {
     });
 }
 
-
-
 function load_file_contents2(path, callback) {
     var f;
     async.waterfall([
@@ -57,9 +55,9 @@ function load_file_contents2(path, callback) {
             fs.fstat(f, cb);
         },
         function (stats, cb) {
-            var b = new Buffer(100000);
+            var b = new Buffer(stats.size);
             if (stats.isFile()) {
-                fs.read(f, b, 0, 100000, null, cb);
+                fs.read(f, b, 0, stats.size, null, cb);
             } else {
                 calback(make_error("not_file", "Can't load directory"));
             }
@@ -78,7 +76,6 @@ function load_file_contents2(path, callback) {
         callback(err, file_contents);
     });
 }
-
 
 
 

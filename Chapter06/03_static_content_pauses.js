@@ -23,36 +23,27 @@ function serve_static_file(file, res) {
     var ct = content_type_for_path(file);
     res.writeHead(200, { "Content-Type" : ct });
 
-    rs.on(
-        'error',
-        function (e) {
-            res.writeHead(404, { "Content-Type" : "application/json" });
-            var out = { error: "not_found",
-                        message: "'" + file + "' not found" };
-            res.end(JSON.stringify(out) + "\n");
-        }
-    );
+    rs.on('error', (e) => {
+        res.writeHead(404, { "Content-Type" : "application/json" });
+        var out = { error: "not_found",
+                    message: "'" + file + "' not found" };
+        res.end(JSON.stringify(out) + "\n");
+    });
 
-    rs.on(
-        'readable',
-        function () {
-            var data = rs.read();
-            if (!res.write(data)) {
-                rs.pause();
-            }
+    rs.on('readable', () => {
+        var data = rs.read();
+        if (!res.write(data)) {
+            rs.pause();
         }
-    );
+    });
 
-    res.on('drain', function () {
+    res.on('drain', () => {
         rs.resume();
     });
 
-    rs.on(
-        'end',
-        function () {
-            res.end();  // we're done!!!
-        }
-    );
+    rs.on('end', () => {
+        res.end();  // we're done!!!
+    });
 }
 
 function content_type_for_path (file) {

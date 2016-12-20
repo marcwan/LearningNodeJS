@@ -1,5 +1,4 @@
 $(function(){
- 
     var tmpl,   // Main template HTML
     tdata = {};  // JSON data object that feeds the template
  
@@ -11,7 +10,10 @@ $(function(){
             tmpl = d;
         });
 
- 
+        if (readCookie("username")) {
+            tdata.username = readCookie("username");
+        }
+
         // Retrieve the server data and then initialise the page  
         $.getJSON("/v1/albums.json", function (d) {
             $.extend(tdata, d.data);

@@ -1,9 +1,9 @@
 {
   "name": "Round-Robin-Demo",
   "description": "A little proxy server to round-robin requests",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "dependencies": {
-    "http-proxy": "0.8.x"
+    "http-proxy": "1.x"
   }
 }

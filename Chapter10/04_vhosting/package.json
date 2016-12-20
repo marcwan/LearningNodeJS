@@ -1,0 +1,12 @@
+{
+  "name": "Virtual-Hosts-Demo",
+  "description": "Demonstrates virtual hosts and expressjs",
+  "version": "0.0.2",
+  "private": true,
+  "dependencies": {
+    "async": "2.x",
+    "express": "4.x",
+    "express-vhost": "0.x",
+    "morgan" : "1.x"
+  }
+}

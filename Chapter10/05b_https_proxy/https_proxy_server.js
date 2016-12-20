@@ -1,34 +1,20 @@
-var fs = require('fs'),
-    http = require('http'),
+var httpProxy = require('http-proxy'),
     https = require('https'),
-    httpProxy = require('http-proxy');
+    fs = require('fs');
 
+// 1. Get certificates ready.
+var privateKey = fs.readFileSync('privkey.pem').toString();
+var certificate = fs.readFileSync('newcert.pem').toString();
 
 var options = {
-    https: {
-        key: fs.readFileSync('privkey.pem', 'utf8'),
-        cert: fs.readFileSync('newcert.pem', 'utf8')
-    }
-};
+    key : privateKey,
+    cert : certificate
+}
 
+// 2. Create an instance of HttpProxy to use with another server
+var proxy = httpProxy.createProxyServer({});
 
-//
-// Create a standalone HTTPS proxy server
-//
-//httpProxy.createServer(8000, 'localhost', options).listen(8001);
-
-
-//
-// Create an instance of HttpProxy to use with another HTTPS server
-//
-var proxy = new httpProxy.HttpProxy({
-    target: {
-        host: 'localhost', 
-        port: 8081
-    }
-});
-
-https.createServer(options.https, function (req, res) {
-    proxy.proxyRequest(req, res)
-}).listen(443);
-
+// 3. Create https server and start accepting connections.
+https.createServer(options, function (req, res) {
+    proxy.web(req, res, { target: "http://localhost:8081" });
+}).listen(8443);

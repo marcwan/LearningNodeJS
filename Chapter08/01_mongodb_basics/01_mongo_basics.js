@@ -1,18 +1,10 @@
-var Db = require('mongodb').Db,
-    Connection = require('mongodb').Connection,
-    Server = require('mongodb').Server,
+var MongoClient = require('mongodb').MongoClient,
     async = require('async');
 
-var host = process.env['MONGO_NODE_DRIVER_HOST'] != null ? process.env['MONGO_NODE_DRIVER_HOST'] : 'localhost';
-var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? process.env['MONGO_NODE_DRIVER_PORT'] : Connection.DEFAULT_PORT;
+// Connection URL
+var url = 'mongodb://localhost:27017/photosharingapp';
 
-
-var db = new Db('PhotoAlbums', 
-                new Server(host, port, 
-                           { auto_reconnect: true,
-                             poolSize: 20}),
-                { w: 1 });
-
+var db;
 var albums, photos;
 
 
@@ -25,30 +17,42 @@ var albums, photos;
  * those in the next function called in the waterfall.
  */
 async.waterfall([
-
-    // 1. open database connection
     function (cb) {
-        console.log("\n** 1. open db");
-        db.open(cb);
+        console.log("1. ------- connect --");
+        // Use connect method to connect to the Server
+        MongoClient.connect(url, {
+                                db: {
+                                    w: 1
+                                },
+                                server: {
+                                    maxPoolSize: 200
+                                },
+                            },
+                            function(err, dbase) {
+                                if (err) return cb(err);
+                                console.log("Connected correctly to server");
+                                db = dbase;
+                                cb(null);
+                            });
     },
-
     // 2. create collections for our albums and photos
-    function (db, cb) {
+    function (cb) {
         console.log("\n** 2. create albums and photos collections.");
-        db.createCollection("albums", cb);
+        db.collection("albums", cb);
     },
 
     function (albums_coll, cb) {
         albums = albums_coll;
-        db.createCollection("photos", cb);
+        db.collection("photos", cb);
     },
 
     // 3. verify that creating a new album w same name errors out
     function (photos_coll, cb) {
         console.log("\n** 3. verify can't re-create collection if strict.");
         photos = photos_coll;
-        db.createCollection("albums", {strict: true}, function (err, results) {
+        db.collection("albums", {strict: true}, function (err, results) {
             if (err) {
+                console.log(JSON.stringify(err, 0, 2));
                 console.log("Got EXPECTED error re-creating albums.");
                 cb(null);
                 return;
@@ -57,7 +61,7 @@ async.waterfall([
         });
     },
 
-    // 4. let's add some ablums now
+    // 4. let's add some albums now
     function (cb) {
         var docs = [{ _id: "italy2012",
                       name:"italy2012",
@@ -79,13 +83,12 @@ async.waterfall([
                     }];
 
         console.log("\n** 4. add albums.");
-        albums.insert(docs, { safe: true }, cb);
+        albums.insertMany(docs, { safe: true }, cb);
     },
 
     // 5. let's add some photos to albums
     function (results, cb) {
         console.log("added albums: ");
-        console.log(results);
 
         var pix = [
             { filename: "picture_01.jpg",
@@ -124,7 +127,7 @@ async.waterfall([
             { filename: "photo_03.jpg",
               albumid: "japan2010",
               description: "shinjuku is nice",
-              date: "2010/06/12 08:80:40" },
+              date: "2010/06/12 08:30:40" },
             { filename: "photo_04.jpg",
               albumid: "japan2010",
               description: "eating sushi",
@@ -165,13 +168,11 @@ async.waterfall([
         ];
 
         console.log("\n** 5. Add pictures.");
-        photos.insert(pix, { safe: true }, cb);
+        photos.insertMany(pix, { safe: true }, cb);
     },
 
     function (results, cb) {
         console.log("added photos to albums:");
-        console.log(results);
-
 
         // 6. list all albums
         console.log("\n** 6. list albums.");
@@ -192,7 +193,6 @@ async.waterfall([
 
     function (italy2012, cb) {
         console.log("fetching italy2012:");
-        console.log(italy2012);
 
         // 8. find all photos in italy2012 album. sort by date,
         //    and return subset
@@ -214,22 +214,20 @@ async.waterfall([
 
         // 9. replace the description in a photo
         console.log("\n** 9. update photo.");
-        photos.update({ filename: "photo_03.jpg", albumid: "japan2010" },
-                      { $set: { description: "NO SHINJUKU! BAD!" } },
-                      { safe: true },
-                      cb);
+        photos.updateOne({ filename: "photo_03.jpg", albumid: "japan2010" },
+                         { $set: { description: "NO SHINJUKU! BAD!" } },
+                         { safe: true },
+                         cb);
     },
 
-    function (results, stats, cb) {
-        console.log(arguments);
+    function (results, cb) {
         console.log("Updated photo_03.jpg in Japan2010");
-        console.log(results);
 
         // 10. delete a photo
         console.log("\n** 10. delete photo.");
-        photos.remove({ filename: "photo_04.jpg", albumid: "japan2010" },
-                      { safe: true },
-                      cb);
+        photos.deleteOne({ filename: "photo_04.jpg", albumid: "japan2010" },
+                         { safe: true },
+                         cb);
     },
 
     function (number_deleted, cb) {
@@ -247,9 +245,9 @@ async.waterfall([
         console.log("Deleted " + number_deleted + " albums.");
 
         //  b. delete the photos in it.
-        photos.remove({ albumid: "australia2010" },
-                      { safe: true },
-                      cb);
+        photos.deleteMany({ albumid: "australia2010" },
+                          { safe: true },
+                          cb);
     },
 
     function (number_deleted, cb) {
@@ -262,7 +260,6 @@ async.waterfall([
 
     function (results, cb) {
         console.log("Results of search for france2014:");
-        console.log(results);
         cb(null);
     }
 ],

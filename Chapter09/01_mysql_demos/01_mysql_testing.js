@@ -1,14 +1,11 @@
 
-var pool = require('generic-pool'),
-    mysql = require('mysql'),
+var mysql = require('mysql'),
     async = require('async');
 
 var host = "localhost";
 var database = "PhotoAlbums";
 var user = "root";
-var password = "";
-
-
+var password = "secret";
 
 
 /**
@@ -27,10 +24,10 @@ async.waterfall([
     function (cb) {
         console.log("\n** 1. create connection.");
         dbclient = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "",
-            database: "PhotoAlbums"
+            host: host,
+            user: user,
+            password: password,
+            database: database,
         });
 
         dbclient.connect(cb);

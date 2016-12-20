@@ -30,6 +30,16 @@ $(function(){
             $.extend(tdata, photo_d);
         });
 
+        $(document).ajaxError(function (event, request, settings) {
+            try {
+                var deets = JSON.parse(request.responseText);
+                alert(deets.message);
+            } catch (e) {
+                alert("Unknown failure loading this page: " + JSON.stringify(request));
+            }
+            window.location = "/";
+        });
+
         // When AJAX calls are complete parse the template 
         // replacing mustache tags with vars
         $(document).ajaxStop(function () {
@@ -46,6 +56,8 @@ function massage_album(d) {
 
     var p = d.data.photos;
     var a = d.data.album_data;
+
+    obj.album_data = d.data.album_data;
 
     for (var i = 0; i < p.length; i++) {
         var url = "/albums/" + a.name + "/" + p[i].filename;

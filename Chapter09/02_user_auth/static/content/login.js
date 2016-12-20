@@ -11,20 +11,11 @@ $(function(){
             tmpl = d;
         });
 
-        // Retrieve the server data and then initialise the page  
-//        $.getJSON("/v1/users/logged_in.json", function (d) {
-//            $.extend(tdata, d);
-//        });
-
         // When AJAX calls are complete parse the template 
         // replacing mustache tags with vars
         $(document).ajaxStop(function () {
-//            if (tdata.data.logged_in)
-//                window.location = "/pages/admin/home";
-//            else {
-                var renderedPage = Mustache.to_html( tmpl, tdata );
-                $("body").html( renderedPage );
-//            }
+            var renderedPage = Mustache.to_html( tmpl, tdata );
+            $("body").html( renderedPage );
         });
     }();
 });

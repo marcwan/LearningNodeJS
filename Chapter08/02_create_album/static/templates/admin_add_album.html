@@ -7,10 +7,11 @@
  <dl>
   <dt>Album Name:</dt>
   <dd><input type='text' name='name' id="name" size='30'/></dd>
-  <dt>Title::</dt>
-  <dd><input id="photo_file" type="text" name="title" size="30"/></dd>
+  <dt>Title:</dt>
+  <dd><input id="title" type="text" name="title" size="30"/></dd>
   <dt>Description:</dt>
-  <dd><textarea rows="5" cols="30" name="description"></textarea></dd>
+  <dd><textarea id="description" rows="5" cols="30"
+                name="description"></textarea></dd>
  </dl>
  <input type="hidden" id="date" name="date" value=""/>
 </form>
@@ -47,7 +48,7 @@
           data: json,
           success: function (resp) {
               alert("Success! Going to album now");
-              window.location = "/pages/album/" + $("input#name");
+              window.location = "/pages/album/" + $("input#name").val();
           }
       });
   });

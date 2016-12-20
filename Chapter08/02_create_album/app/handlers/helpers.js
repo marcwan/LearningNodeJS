@@ -79,7 +79,7 @@ exports.no_such_album = function () {
 
 
 exports.http_code_for_error = function (err) {
-    switch (err.message) {
+    switch (err.code) {
       case "no_such_album":
         return 403;
       case "invalid_resource":

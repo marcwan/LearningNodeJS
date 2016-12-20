@@ -1,7 +1,7 @@
 
 var fs = require('fs'),
     crypto = require("crypto"),
-    local = require('../local.config.js'),
+    local = require('../local.config.json'),
     db = require('./db.js'),
     path = require("path"),
     async = require('async'),
@@ -35,13 +35,13 @@ exports.create_album = function (data, callback) {
         function (album_data, cb) {
             var write = JSON.parse(JSON.stringify(album_data));
             write._id = album_data.name;
-            db.albums.insert(write, { w: 1, safe: true }, cb);
+            db.albums.insertOne(write, { w: 1, safe: true }, cb);
         },
 
-        // make sure the folder exists.
-        function (new_album, cb) {
+        // make sure the folder exists in our static folder.
+        function (results, cb) {
             write_succeeded = true;
-            final_album = new_album[0];
+            final_album = results.ops[0];
             fs.mkdir(local.config.static_content
                      + "albums/" + data.name, cb);
         }
@@ -50,7 +50,7 @@ exports.create_album = function (data, callback) {
         // convert file errors to something we like.
         if (err) {
             if (write_succeeded)
-                db.albums.remove({ _id: data.name }, function () {});
+                db.albums.deleteOne({ _id: data.name }, function () {});
 
             if (err instanceof Error && err.code == 11000) 
                 callback(backhelp.album_already_exists());
@@ -66,7 +66,7 @@ exports.create_album = function (data, callback) {
 
 
 exports.album_by_name = function (name, callback) {
-    db.albums.find({ _id: name }).toArray(function (err, results) {
+    db.albums.find({ _id: name }).toArray((err, results) => {
         if (err) {
             callback(err);
             return;
@@ -90,7 +90,7 @@ exports.photos_for_album = function (album_name, pn, ps, callback) {
     db.photos.find({ albumid: album_name })
         .skip(pn)
         .limit(ps)
-        .sort("date")
+        .sort({ date: 1})
         .toArray(callback);
 };
 
@@ -135,12 +135,12 @@ exports.add_photo = function (photo_data, path_to_photo, callback) {
         // add the photo to the collection
         function (pd, cb) {
             pd._id = pd.albumid + "_" + pd.filename;
-            db.photos.insert(pd, { w: 1, safe: true }, cb);
+            db.photos.insertOne(pd, { w: 1, safe: true }, cb);
         },
 
         // now copy the temp file to static content
-        function (new_photo, cb) {
-            final_photo = new_photo[0];
+        function (results, cb) {
+            final_photo = results.ops[0];
 
             var save_path = local.config.static_content + "albums/"
                 + photo_data.albumid + "/" + base_fn;
