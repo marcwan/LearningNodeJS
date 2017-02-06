@@ -81,6 +81,13 @@ function load_album(album_name, page, page_size, callback) {
     });
 }
 
+function do_rename(old_name, new_name, callback) {
+    // Rename the album folder.
+    fs.rename("albums/" + old_name,
+              "albums/" + new_name,
+              callback);
+}
+
 function handle_incoming_request(req, res) {
 
     // parse the query params into an object and get the path
@@ -225,6 +232,11 @@ function invalid_resource() {
 function no_such_album() {
     return make_error("no_such_album",
                       "The specified album does not exist");
+}
+
+function bad_json() {
+    return make_error("invalid_json",
+                      "the provided data is not valid JSON");
 }
 
 var s = http.createServer(handle_incoming_request);
