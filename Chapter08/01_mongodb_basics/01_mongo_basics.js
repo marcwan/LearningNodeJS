@@ -38,19 +38,19 @@ async.waterfall([
     // 2. create collections for our albums and photos
     function (cb) {
         console.log("\n** 2. create albums and photos collections.");
-        db.collection("albums", cb);
+        db.createCollection("albums", cb);
     },
 
     function (albums_coll, cb) {
         albums = albums_coll;
-        db.collection("photos", cb);
+        db.createCollection("photos", cb);
     },
 
     // 3. verify that creating a new album w same name errors out
     function (photos_coll, cb) {
         console.log("\n** 3. verify can't re-create collection if strict.");
         photos = photos_coll;
-        db.collection("albums", {strict: true}, function (err, results) {
+        db.createCollection("albums", {strict: true}, function (err, results) {
             if (err) {
                 console.log(JSON.stringify(err, 0, 2));
                 console.log("Got EXPECTED error re-creating albums.");

@@ -30,12 +30,12 @@ exports.init = function (callback) {
         //    they already exist, then we're good.
         function (cb) {
             console.log("** 2. create albums and photos collections.");
-            db.collection("albums", cb);
+            db.createCollection("albums", cb);
         },
 
         function (albums_coll, cb) {
             exports.albums = albums_coll;
-            db.collection("photos", cb);
+            db.createCollection("photos", cb);
         },
 
         function (photos_coll, cb) {
